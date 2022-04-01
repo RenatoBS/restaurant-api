@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Restaurant } from './schemas/restaurant.schema';
 import * as mongoose from 'mongoose'
 import { Query } from 'express-serve-static-core';
+import APIFeatures from 'src/utils/apiFeatures.utils';
 
 @Injectable()
 export class RestaurantsService {
@@ -12,7 +13,6 @@ export class RestaurantsService {
     ) { }
 
     async findAll(query: Query): Promise<Restaurant[]> {
-        
         const resPerPage = 2
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
@@ -23,23 +23,26 @@ export class RestaurantsService {
             }
         } : {}
         const restaurants = await this.restaurantModel
-        .find({ ...keyword })
-        .limit(resPerPage)
-        .skip(skip)
+            .find({ ...keyword })
+            .limit(resPerPage)
+            .skip(skip)
 
         return restaurants
     }
 
     async findById(id: string): Promise<Restaurant> {
         const isValidId = mongoose.isValidObjectId(id)
-        if(!isValidId) throw new BadRequestException('Wrong moongose id error, please provide correct id.')
+        if (!isValidId) throw new BadRequestException('Wrong moongose id error, please provide correct id.')
         const restaurant = await this.restaurantModel.findById(id)
         if (!restaurant) throw new NotFoundException('Restaurant not found.')
         return restaurant
     }
 
     async create(restaurantDTO: Restaurant): Promise<Restaurant> {
-        const restaurant = await this.restaurantModel.create(restaurantDTO)
+        const location = await APIFeatures.getRestaurantLocation(restaurantDTO.address)
+
+        const data = Object.assign(restaurantDTO, { location })
+        const restaurant = await this.restaurantModel.create(data)
         return restaurant
     }
 

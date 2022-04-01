@@ -12,7 +12,6 @@ export class CreateRestaurantDto {
     @IsEmail({}, {message: 'Please enter correct email address'})
     readonly email: string
     @IsNotEmpty()
-    @IsPassportNumber('US')
     readonly phoneNo: number
     @IsNotEmpty()
     @IsString()

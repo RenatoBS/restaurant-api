@@ -7,6 +7,25 @@ export enum Category {
 }
 
 @Schema()
+export class Location {
+    @Prop({ type: String, enum: ['Point'] })
+    type: string
+    @Prop({ index: '2dsphere' })
+    coordinates: Number[]
+    @Prop()
+    formattedAddress: string
+    @Prop()
+    city: string
+    @Prop()
+    state: string
+    @Prop()
+    zipcode: string
+    @Prop()
+    country: string
+
+}
+
+@Schema()
 export class Restaurant {
 
     @Prop()
@@ -29,6 +48,9 @@ export class Restaurant {
 
     @Prop()
     images?: object[]
+
+    @Prop({ type: Object, ref: 'Location' })
+    location?: Location
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant)
