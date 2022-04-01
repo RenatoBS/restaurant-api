@@ -4,6 +4,7 @@ import { Restaurant } from './schemas/restaurant.schema';
 import * as mongoose from 'mongoose'
 import { Query } from 'express-serve-static-core';
 import APIFeatures from 'src/utils/apiFeatures.utils';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class RestaurantsService {
@@ -38,10 +39,10 @@ export class RestaurantsService {
         return restaurant
     }
 
-    async create(restaurantDTO: Restaurant): Promise<Restaurant> {
+    async create(restaurantDTO: Restaurant, user: User): Promise<Restaurant> {
         const location = await APIFeatures.getRestaurantLocation(restaurantDTO.address)
 
-        const data = Object.assign(restaurantDTO, { location })
+        const data = Object.assign(restaurantDTO, { user: user._id, location })
         const restaurant = await this.restaurantModel.create(data)
         return restaurant
     }
