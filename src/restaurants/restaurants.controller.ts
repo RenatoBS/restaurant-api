@@ -6,8 +6,8 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantsService } from './restaurants.service';
 import { Restaurant } from './schemas/restaurant.schema';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { User } from 'src/auth/schemas/user.schema';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { User } from '../auth/schemas/user.schema';
 
 @Controller('restaurants')
 export class RestaurantsController {
@@ -36,9 +36,10 @@ export class RestaurantsController {
 
     @Put(':id')
     @UseGuards(AuthGuard())
-    async updateRestaurant(@Param('id') id: string, @Body() restaurant: UpdateRestaurantDto): Promise<Restaurant> {
-        await this.restaurantsServices.findById(id)
-        return this.restaurantsServices.updateById(id, restaurant)
+    async updateRestaurant(@Param('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto, @CurrentUser() user: User): Promise<Restaurant> {
+        const restaurant = await this.restaurantsServices.findById(id)
+        if (restaurant.user.toString() !== user._id.toString()) throw new ForbiddenException('You can not update this restaurant.')
+        return this.restaurantsServices.updateById(id, updateRestaurantDto)
     }
 
     @Delete(':id')
@@ -46,7 +47,7 @@ export class RestaurantsController {
     async deleteRestaurant(@Param('id') id: string, @CurrentUser() user: User): Promise<{ deleted: Boolean }> {
         const restaurant = await this.restaurantsServices.findById(id)
         if (restaurant.user.toString() !== user._id.toString()) throw new ForbiddenException('You can not delete this restaurant.')
-            const isDeleted = await this.restaurantsServices.deleteImages(restaurant.images)
+        const isDeleted = await this.restaurantsServices.deleteImages(restaurant.images)
         if (isDeleted) {
             await this.restaurantsServices.deleteById(id)
             return { deleted: true }

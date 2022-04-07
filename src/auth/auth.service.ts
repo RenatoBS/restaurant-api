@@ -5,7 +5,7 @@ import { Model } from 'mongoose'
 import { SignUpDto } from './dto/singup.dto';
 import * as bcrypt from 'bcryptjs'
 import { LoginDto } from './dto/login.dto';
-import APIFeatures from 'src/utils/apiFeatures.utils';
+import APIFeatures from '../utils/apiFeatures.utils';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

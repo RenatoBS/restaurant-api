@@ -1,8 +1,6 @@
 import { JwtService } from "@nestjs/jwt"
-import { rejects } from "assert"
 import { S3 } from "aws-sdk"
-import e from "express"
-import { Location } from "src/restaurants/schemas/restaurant.schema"
+import { Location } from "../restaurants/schemas/restaurant.schema"
 
 const nodeGeoCoder = require('node-geocoder')
 

@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Restaurant } from './schemas/restaurant.schema';
 import * as mongoose from 'mongoose'
 import { Query } from 'express-serve-static-core';
-import APIFeatures from 'src/utils/apiFeatures.utils';
-import { User } from 'src/auth/schemas/user.schema';
+import APIFeatures from '../utils/apiFeatures.utils';
+import { User } from '../auth/schemas/user.schema';
 
 @Injectable()
 export class RestaurantsService {

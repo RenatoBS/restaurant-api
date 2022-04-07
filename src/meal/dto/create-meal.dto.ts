@@ -1,5 +1,5 @@
 import { IsEmpty, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator"
-import { User } from "src/auth/schemas/user.schema"
+import { User } from "../../auth/schemas/user.schema"
 import { Category } from "../schemas/meal.schema"
 
 export class CreateMealDto {
