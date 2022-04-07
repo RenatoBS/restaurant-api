@@ -31,10 +31,13 @@ export class AuthService {
     async login(loginDto: LoginDto): Promise<{ token: string }> {
         const { email, password } = loginDto;
         const user = await this.userModel.findOne({ email }).select('+password')
-        if (!user) throw new UnauthorizedException('Invalid email or password')
+        if (!user) {
+            throw new UnauthorizedException('Invalid email or password')
+        }
         const isPasswordMatched = await bcrypt.compare(password, user.password)
-        if (!isPasswordMatched) throw new UnauthorizedException('Invalid email or password')
-
+        if (!isPasswordMatched) {
+            throw new UnauthorizedException('Invalid email or password')
+        }
         const token = await APIFeatures.assignJwtToken(user._id, this.jwtService)
         return { token }
     }
